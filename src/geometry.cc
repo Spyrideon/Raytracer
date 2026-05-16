@@ -1,5 +1,5 @@
-#include "../geometry.h"
-#include "../geometry.tcc"
+#include "geometry.h"
+#include "geometry.tcc"
 
 template class Intersection_Context<float,3u>;
 
@@ -14,4 +14,4 @@ template class Sphere<float, 3u>;
 
 template class Triangle<float, 3u>; 
 
-template bool refract<float, 3u>(float refraction_index, Vector<float, 3u> normal, Vector<float, 3u> direction, Vector<float, 3> & transmission);
+template bool refract<float, 3u>(float refraction_index, Vector<float, 3u> normal, Vector<float, 3u> direction, Vector<float, 3u> & transmission);
