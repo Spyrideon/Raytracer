@@ -16,9 +16,10 @@ endif()
 
 # ---- Main executable ----
 add_executable(raytracer
-    src/raytracer.cc
-    src/math.cc
-    src/geometry.cc
+        src/raytracer.cc
+        src/math.cc
+        src/geometry.cc
+        src/Screen.cpp
 )
 
 target_include_directories(raytracer PRIVATE
