@@ -20,6 +20,8 @@ add_executable(raytracer
         src/math.cc
         src/geometry.cc
         src/Screen.cpp
+        src/Camera.cpp
+        include/Color.h
 )
 
 target_include_directories(raytracer PRIVATE

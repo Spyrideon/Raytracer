@@ -6,17 +6,17 @@
 #include "Screen.h"
 
 constexpr int WIDTH = 100;
-constexpr int HEIGTH = 100;
+constexpr int HEIGHT = 100;
 
 int main() {
-  Screen screen(WIDTH, HEIGTH);
+  Screen screen(WIDTH, HEIGHT);
 
-  for (int y = 0; y < HEIGTH; y++) {
+  for (int y = 0; y < HEIGHT; y++) {
     for (int x = 0; x < WIDTH; x++) {
-      screen.writePixel(x, y, 255, 100, 100);
+      screen.writePixel(x, y, 255, 255, 255);
     }
   }
-
+  Vector3df Test = {1.f, 2.f, 3.f};
   screen.save("../output/render.ppm");
 
 
