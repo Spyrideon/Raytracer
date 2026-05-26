@@ -15,7 +15,7 @@ public:
            float vFovDeg,
            float aspect);
 
-    [[nodiscard]] Ray generateRay(float u, float v) const;
+    [[nodiscard]] Ray3df generateRay(float u, float v) const;
 
 private:
     Vector3df origin{0.f};

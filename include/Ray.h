@@ -1,14 +1,7 @@
 #ifndef RAYTRACER_RAY_H
 #define RAYTRACER_RAY_H
-#include "rt_math.h"
+#include "geometry.h"
 
-struct Ray {
-    Vector3df origin;
-    Vector3df direction;
-
-    Ray(const Vector3df ori, const Vector3df dir) : origin(ori), direction(dir) {}
-
-    [[nodiscard]] Vector3df at(const float t) const{return origin +  t * direction;}
-};
+using Ray3df = Ray3df; // no-op, Ray3df already available via geometry.h
 
 #endif //RAYTRACER_RAY_H

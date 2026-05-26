@@ -22,6 +22,8 @@ add_executable(raytracer
         src/Screen.cpp
         src/Camera.cpp
         include/Color.h
+        include/Material.h
+        include/Material.h
 )
 
 target_include_directories(raytracer PRIVATE
