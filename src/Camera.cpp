@@ -28,9 +28,9 @@ Camera::Camera(const Vector3df lookFrom,
     lowerLeftCorner = origin - halfW * u - halfH * v - w;
 }
 
-Ray Camera::generateRay(const float u, const float v) const {
+Ray3df Camera::generateRay(const float u, const float v) const {
     const Vector3df target = lowerLeftCorner + u * horizontal + v * vertical;
     Vector3df direction = target - origin;
     direction.normalize();
-    return Ray{ origin, direction };
+    return Ray3df{ origin, direction };
 }
