@@ -4,12 +4,12 @@
 
 class SphereObject : public Object {
 public:
-    SphereObject(Vector3df center, float radius, Material mat)
+    SphereObject(const Vector3df center, const float radius, Material mat)
         : Object(mat), sphere(center, radius) {}
 
-    HitRecord intersect(const Ray3df& ray,
-                                      float tMin,
-                                      float tMax) const override
+    [[nodiscard]] HitRecord intersect(const Ray3df& ray,
+                                      const float tMin,
+                                      const float tMax) const override
     {
         HitRecord rec;
         Intersection_Context<float, 3u> ctx;
