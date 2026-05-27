@@ -26,6 +26,9 @@ add_executable(raytracer
         include/Material.h
         include/Object.h
         include/Object.h
+        include/SphereObject.h
+        include/SphereObject.h
+        include/TriangleObject.h
 )
 
 target_include_directories(raytracer PRIVATE

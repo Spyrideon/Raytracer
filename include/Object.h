@@ -14,8 +14,11 @@ public:
     Material material;
 
     explicit Object(Material mat) : material(mat) {}
+    virtual ~Object() = default;
 
-    [[nodiscard]] virtual HitRecord intersect(const Ray3df& ray, float tMin, float tMax) const = 0;
+    [[nodiscard]] virtual HitRecord intersect(  const Ray3df& ray,
+                                                float tMin,
+                                                float tMax) const = 0;
 };
 
 #endif //RAYTRACER_OBJECT_H
