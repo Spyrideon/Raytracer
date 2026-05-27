@@ -1,7 +1,5 @@
 #ifndef RAYTRACER_MATERIAL_H
 #define RAYTRACER_MATERIAL_H
-
-#pragma once
 #include "rt_math.h"
 
 using Color = Vector3df;

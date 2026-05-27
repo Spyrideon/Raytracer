@@ -24,6 +24,8 @@ add_executable(raytracer
         include/Color.h
         include/Material.h
         include/Material.h
+        include/Object.h
+        include/Object.h
 )
 
 target_include_directories(raytracer PRIVATE
