@@ -25,12 +25,16 @@ public:
         Intersection_Context<float, 3u> ctx;
 
         if (triangle.intersects(ray, ctx) && ctx.t > tMin && ctx.t < tMax) {
-            rec.hit = true;
-            rec.ctx = ctx;
-
             const float w = 1.0f - ctx.u - ctx.v;
             Vector3df interpolated = w * na + ctx.u * nb + ctx.v * nc;
             interpolated.normalize();
+
+            if (ray.direction * interpolated > 0.0f) {
+                return rec;
+            }
+
+            rec.hit = true;
+            rec.ctx = ctx;
             rec.ctx.normal = interpolated;
         }
         return rec;
