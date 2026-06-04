@@ -32,9 +32,44 @@ public:
         return closest;
     }
 
-    /*Color lambertian(const HitRecord& rec, const Material& mat) const { }
+    [[nodiscard]] Color lambertian(const HitRecord& rec, const Material& mat) const {
+        Color diffuseSum = {0.0f, 0.0f, 0.0f};
 
+        constexpr float LIGHT_POWER = 25.0f;
+
+        for (const auto& light : lights) {
+            Vector3df toLight = light - rec.ctx.intersection;
+            const float lightDist = toLight.length();
+            if (lightDist < 1e-6f) continue;
+            toLight /= lightDist; // normalize
+
+            const Ray3df shadowRay{ rec.ctx.intersection, toLight };
+            HitRecord shadowRec;
+            if (closestHit(shadowRay, shadowRec, 1e-3f, lightDist - 1e-3f))
+                continue;
+
+            const float cosTheta = toLight * rec.ctx.normal;
+            if (cosTheta > 0.0f) {
+                const float attenuation = LIGHT_POWER / (lightDist * lightDist);
+                const float k = cosTheta * attenuation;
+                diffuseSum[0] += mat.diffuse[0] * k;
+                diffuseSum[1] += mat.diffuse[1] * k;
+                diffuseSum[2] += mat.diffuse[2] * k;
+            }
+        }
+
+        if (!lights.empty()) {
+            const float invN = 1.0f / static_cast<float>(lights.size());
+            diffuseSum *= invN;
+        }
+
+        return diffuseSum + mat.ambient;
+    }
+
+    /*
     // recursive
-    Color traceRay(const Ray3df& ray, int depth = 4) const { }*/
+    Color traceRay(const Ray3df& ray, int depth = 4) const {
+
+    }*/
 };
 #endif //RAYTRACER_SCENE_H
