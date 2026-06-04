@@ -26,8 +26,8 @@ template Vector<float, 3u> operator-(const Vector<float, 3u> value, const Vector
 template Vector<float, 4u> operator-(const Vector<float, 4u> value, const Vector<float, 4u> minuend);
 
 // dot product
-// template float operator*(Vector<float, 2u> value, const Vector<float, 2u> addend);
-// template float operator*(Vector<float, 3u> value, const Vector<float, 3u> addend);
-// template float operator*(Vector<float, 4u> value, const Vector<float, 4u> addend);
+template float operator*(Vector<float, 2u> value, const Vector<float, 2u> addend);
+template float operator*(Vector<float, 3u> value, const Vector<float, 3u> addend);
+template float operator*(Vector<float, 4u> value, const Vector<float, 4u> addend);
 
 
