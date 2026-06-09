@@ -66,10 +66,36 @@ public:
         return diffuseSum + mat.ambient;
     }
 
-    /*
     // recursive
     Color traceRay(const Ray3df& ray, int depth = 4) const {
+        if (depth <= 0)
+            return background;
 
-    }*/
+        HitRecord rec;
+        const Object* obj = closestHit(ray, rec);
+
+        if (!obj)
+            return background;
+
+        const Material& mat = obj->material;
+        Color color = lambertian(rec, mat);
+
+        const float reflStrength = (mat.reflective[0] +
+                                    mat.reflective[1] +
+                                    mat.reflective[2]) / 3.0f;
+
+        if (reflStrength > 0.001f) {
+            Vector3df reflDir = ray.direction.get_reflective(rec.ctx.normal);
+            reflDir.normalize();
+            const Ray3df reflRay{ rec.ctx.intersection, reflDir };
+            const Color reflColor = traceRay(reflRay, depth - 1);
+
+            color[0] += mat.reflective[0] * reflColor[0];
+            color[1] += mat.reflective[1] * reflColor[1];
+            color[2] += mat.reflective[2] * reflColor[2];
+        }
+
+        return color;
+    }
 };
 #endif //RAYTRACER_SCENE_H
