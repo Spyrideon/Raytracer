@@ -9,10 +9,10 @@
 #include "Scene.h"
 #include "Screen.h"
 
-constexpr int WIDTH  = 1600;
-constexpr int HEIGHT = 1600;
-constexpr int   DEPTH  = 6;     // max reflection bounces
-constexpr float GAMMA  = 2.0f;  // gamma correction exponent
+constexpr int WIDTH  = 2000;
+constexpr int HEIGHT = 2000;
+constexpr int   DEPTH  = 8;     // max reflection bounces
+constexpr float GAMMA  = 2.2f;  // gamma correction exponent
 
 int main() {
   Screen screen(WIDTH, HEIGHT);
@@ -29,7 +29,7 @@ int main() {
 
   auto toBytes = [](float v) -> uint8_t {
     v = std::clamp(v, 0.0f, 1.0f);
-    return static_cast<uint8_t>(255.99f * std::sqrt(v)); // gamma 2
+    return static_cast<uint8_t>(255.99f * std::pow(v, 1.0f / GAMMA)); // std::sqrt(v) faster
   };
 
   for (int y = 0; y < HEIGHT; y++) {

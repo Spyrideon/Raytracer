@@ -2,9 +2,21 @@
 #define RAYTRACER_SCENE_H
 #include <vector>
 #include <memory>
+#include <random>
 #include "Object.h"
 #include "SphereObject.h"
 #include "TriangleObject.h"
+
+// returns a random point in the unit sphere
+inline Vector3df randomInUnitSphere() {
+    static thread_local std::mt19937 rng{ std::random_device{}() };
+    std::uniform_real_distribution<float> u(-1.0f, 1.0f);
+    Vector3df p{ 0.0f, 0.0f, 0.0f };
+    do {
+        p = Vector3df{ u(rng), u(rng), u(rng) };
+    } while (p * p > 1.0f); // reject points outside the unit sphere
+    return p;
+}
 
 class Scene {
 public:
@@ -12,7 +24,6 @@ public:
     std::vector<Vector3df>               lights;
     Color                                background = {0.0f, 0.0f, 0.0f};
 
-    // can return nullptr
     [[nodiscard]] const Object* closestHit(const Ray3df& ray,
                                            HitRecord& rec,
                                            float tMin = 0.001f,
@@ -37,25 +48,43 @@ public:
 
         constexpr float LIGHT_POWER = 25.0f;
 
+        constexpr int   SHADOW_SAMPLES = 64;
+        constexpr float LIGHT_RADIUS   = 0.3f;
+
         for (const auto& light : lights) {
             Vector3df toLight = light - rec.ctx.intersection;
             const float lightDist = toLight.length();
             if (lightDist < 1e-6f) continue;
             toLight /= lightDist; // normalize
 
-            const Ray3df shadowRay{ rec.ctx.intersection, toLight };
-            HitRecord shadowRec;
-            if (closestHit(shadowRay, shadowRec, 1e-3f, lightDist - 1e-3f))
-                continue;
-
             const float cosTheta = toLight * rec.ctx.normal;
-            if (cosTheta > 0.0f) {
-                const float attenuation = LIGHT_POWER / (lightDist * lightDist);
-                const float k = cosTheta * attenuation;
-                diffuseSum[0] += mat.diffuse[0] * k;
-                diffuseSum[1] += mat.diffuse[1] * k;
-                diffuseSum[2] += mat.diffuse[2] * k;
+            if (cosTheta <= 0.0f) continue; // surface faces away from the light
+
+
+            int visible = 0;
+            for (int s = 0; s < SHADOW_SAMPLES; ++s) {
+                const Vector3df target = light + LIGHT_RADIUS * randomInUnitSphere();
+
+                Vector3df toSample = target - rec.ctx.intersection;
+                const float sampleDist = toSample.length();
+                if (sampleDist < 1e-6f) { ++visible; continue; }
+                toSample /= sampleDist;
+
+                const Ray3df shadowRay{ rec.ctx.intersection, toSample };
+                HitRecord shadowRec;
+                if (!closestHit(shadowRay, shadowRec, 1e-3f, sampleDist - 1e-3f))
+                    ++visible;
             }
+
+            const float shadowFactor =
+                static_cast<float>(visible) / static_cast<float>(SHADOW_SAMPLES);
+            if (shadowFactor <= 0.0f) continue; // fully occluded
+
+            const float attenuation = LIGHT_POWER / (lightDist * lightDist);
+            const float k = cosTheta * attenuation * shadowFactor;
+            diffuseSum[0] += mat.diffuse[0] * k;
+            diffuseSum[1] += mat.diffuse[1] * k;
+            diffuseSum[2] += mat.diffuse[2] * k;
         }
 
         if (!lights.empty()) {
