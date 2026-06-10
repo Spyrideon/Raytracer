@@ -29,6 +29,10 @@ add_executable(raytracer
         include/SphereObject.h
         include/SphereObject.h
         include/TriangleObject.h
+        include/Scene.h
+        include/Scene.h
+        include/CornellBox.h
+        include/CornellBox.h
 )
 
 target_include_directories(raytracer PRIVATE

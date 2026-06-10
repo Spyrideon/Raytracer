@@ -5,23 +5,27 @@
 #include <algorithm>
 
 #include "Camera.h"
+#include "CornellBox.h"
+#include "Scene.h"
 #include "Screen.h"
 
-constexpr int WIDTH = 100;
-constexpr int HEIGHT = 100;
-constexpr int   DEPTH  = 5;     // max reflection bounces
+constexpr int WIDTH  = 1600;
+constexpr int HEIGHT = 1600;
+constexpr int   DEPTH  = 6;     // max reflection bounces
 constexpr float GAMMA  = 2.0f;  // gamma correction exponent
 
 int main() {
   Screen screen(WIDTH, HEIGHT);
 
   Camera camera(
-        Vector3df{ 0.0f,  0.0f,  1.0f},   // lookFrom — in front of the box
-        Vector3df{ 0.0f,  0.0f, -5.0f},   // lookAt   — centre of the box
+        Vector3df{ 0.0f,  0.0f,  9.0f},   // lookFrom: outside, in front of the box
+        Vector3df{ 0.0f,  0.0f, -4.0f},   // lookAt:   centre of the box interior
         Vector3df{ 0.0f,  1.0f,  0.0f},   // up
-        60.0f,                             // vFov
+        60.0f,                            // vFov in degrees
         static_cast<float>(WIDTH) / HEIGHT
     );
+
+  Scene scene = buildCornellBox();
 
   auto toBytes = [](float v) -> uint8_t {
     v = std::clamp(v, 0.0f, 1.0f);
@@ -30,13 +34,21 @@ int main() {
 
   for (int y = 0; y < HEIGHT; y++) {
     for (int x = 0; x < WIDTH; x++) {
-      screen.writePixel(x, y, 255, 255, 255);
+      const float u = static_cast<float>(x) / (WIDTH  - 1);
+      const float v = 1.0f - static_cast<float>(y) / (HEIGHT - 1);
+
+      const Ray3df ray   = camera.generateRay(u, v);
+      const Color  color = scene.traceRay(ray, DEPTH);
+
+      screen.writePixel(x, y,
+          toBytes(color[0]),
+          toBytes(color[1]),
+          toBytes(color[2]));
+
+      std::cout << "x = " << x << ", y = " << y << std::endl;
     }
   }
-  Vector3df Test = {1.f, 2.f, 3.f};
   screen.save("../output/render.ppm");
-
 
   return 0;
 }
-
