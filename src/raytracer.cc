@@ -9,15 +9,15 @@
 #include "Scene.h"
 #include "Screen.h"
 
-constexpr int WIDTH  = 2000;
-constexpr int HEIGHT = 2000;
-constexpr int   DEPTH  = 8;     // max reflection bounces
+constexpr int WIDTH  = 400;
+constexpr int HEIGHT = 400;
+constexpr int   DEPTH  = 3;     // max reflection bounces
 constexpr float GAMMA  = 2.2f;  // gamma correction exponent
 
 int main() {
   Screen screen(WIDTH, HEIGHT);
 
-  Camera camera(
+  const Camera camera(
         Vector3df{ 0.0f,  0.0f,  9.0f},   // lookFrom: outside, in front of the box
         Vector3df{ 0.0f,  0.0f, -4.0f},   // lookAt:   centre of the box interior
         Vector3df{ 0.0f,  1.0f,  0.0f},   // up
@@ -25,7 +25,7 @@ int main() {
         static_cast<float>(WIDTH) / HEIGHT
     );
 
-  Scene scene = buildCornellBox();
+  const Scene scene = buildCornellBox();
 
   auto toBytes = [](float v) -> uint8_t {
     v = std::clamp(v, 0.0f, 1.0f);

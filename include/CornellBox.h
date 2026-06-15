@@ -56,7 +56,7 @@ inline Scene buildCornellBox() {
         Vector3df{-2.0f, -3.5f, -6.0f}, 1.5f, matteRed()));
 
     scene.objects.push_back((std::make_unique<SphereObject>(
-        Vector3df{-1.f, -4.5f, -4}, 0.5, Material({0.0f, 0.0f, 0.1f}, {0.f, 0.f, 0.8f}, {0.5f}))));
+        Vector3df{-1.f, -4.5f, -4}, 0.5, Material({0.0f, 0.0f, 0.1f}, {1.f, 1.f, 0.4f}, {0.1f}))));
 
     return scene;
 }

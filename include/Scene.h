@@ -96,7 +96,7 @@ public:
     }
 
     // recursive
-    Color traceRay(const Ray3df& ray, int depth = 4) const {
+    [[nodiscard]] Color traceRay(const Ray3df& ray, int depth = 4) const {
         if (depth <= 0)
             return background;
 
